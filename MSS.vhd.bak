@@ -1,0 +1,120 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity MSS is
+port ( clock,resetn: IN STD_LOGIC;
+		start,min_max,mostrar_lista,mostrar_ID: IN STD_LOGIC;
+		i_mayor_j,cond_cambio,ok_orden,menor_115,entre_115_125,entre_125_135: IN STD_LOGIC;
+		mayor_135,i_menor,cnt_menor_127,menor_tres,ident,fin_ID,fin_ram,or_n: IN STD_LOGIC;
+		led_fin,D_aguda_severa,d_aguda_moderada,Riesgo_desnutr,No_desnutr: OUT STD_LOGIC;
+		en_cnt,rst_cnt,en_i_cnt,rst_i_cnt,en_read,en_write,en_reg_i,rst_reg_i: OUT STD_LOGIC;
+		en_reg_j,rst_reg_j,sel_j,sel_orden,en_orden,rst_orden,en_clasf,rst_clasf: OUT STD_LOGIC;
+		en_disp,sel_cnt,en_cnthz,rst_cnthz,en_ID,rst_ID,en_uno,en_dos,en_tres: OUT STD_LOGIC;
+		en_cuatro,en_cinco,en_dato,rst_datoID,sel_dato: OUT STD_LOGIC);
+			
+end MSS;
+
+architecture solve of MSS is
+type estado is (T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,T21,T22,T23,T24,T25,T26,T27,T28,T29,T30,T31,T32,T33,T34);
+signal y: estado;
+begin 
+	MSS_transiciones: process (resetn, Clock)
+	begin
+	if resetn='0' then y <= T1;
+	elsif (clock'event and clock ='1') then 
+		case y is
+			when T1 => if start='1' then y <= T2; else y <= T1; end if;
+			when T2 => if min_max='1' then y <= T3; else y <= T2; end if;
+			when T3 => y <= T4;
+			when T4 => if ok_orden='0' then y <= T5; else y <= T12; end if;
+			when T5 => y <= T6;
+			when T6 => if i_menor='1' then y <= T7; else y <= T4; end if;
+			when T7 => y <= T8;
+			when T8 => if i_mayor_j='1' then y <= T9; else y<= T11; end if;
+			when T9 => y <= T10;
+			when T10 => y <= T11;
+			when T11 => y <= T6;
+			when T12 => y <= T13;
+			when T13 => if menor_tres='0' then y <= T14; else y <= T13:end if;
+		   when T14 => if mostrar_lista ='0' and mostrar_ID='0' then y <= T14;
+							elsif mostrar_lista ='1' then y <= T15;
+							elsif mostrar_lista ='0' and mostrar_ID='1' y <= T22; end if;
+			when T15 => if cnt_menor_127='1' then y <= T16; end if;
+			when T16 => if mayor_135 = '0' and entre_125_135='0' and entre_115_125='0' and menor_115='0' then y <=T21;
+							elsif mayor_135 = '0' and entre_125_135='0' and entre_115_125='0' and menor_115='1' then y <=T20;
+							elsif mayor_135 = '0' and entre_125_135='0' and entre_115_125='1' then y <=T19;
+							elsif mayor_135 = '0' and entre_125_135='1' then y <=T18;
+							elsif mayor_135 = '1' then y <=T17;end if;									
+			when T17 => if menor_tres='1' then y <= T17; else y <= T21; end if; 
+			when T18 => if menor_tres='1' then y <= T18; else y <= T21; end if; 
+			when T19 => if menor_tres='1' then y <= T19; else y <= T21; end if; 
+			when T20 => if menor_tres='1' then y <= T20; else y <= T21; end if;
+			when T21 => y <= T15;
+			when T22 => y <= T23;
+			when T23 => if fin_id='0' then y <= T24;else y <= T26;end if;
+			when T24 => if or_n = '0' then y <= T24;else y <= T25;end if; 
+			when T25 => y <= T23;
+			when T26 => y <= T27;
+			when T27 => if fin_ram ='0' and ident ='0' then y <= T28;
+							elsif fin_ram ='0' and ident ='1' then y <= T29;
+							elsif fin_ram ='1' then y <= T14; end if;
+			when T28 => y <=T27;
+			when T29 => if mayor_135 = '0' and entre_125_135='0' and entre_115_125='0' and menor_115='0' then y <=T34;
+							elsif mayor_135 = '0' and entre_125_135='0' and entre_115_125='0' and menor_115='1' then y <=T33;
+							elsif mayor_135 = '0' and entre_125_135='0' and entre_115_125='1' then y <=T32;
+							elsif mayor_135 = '0' and entre_125_135='1' then y <=T31;
+							elsif mayor_135 = '1' then y <=T30;end if;
+			when T30 => if menor_tres='1' then y <= T30; else y <= T34; end if; 
+			when T31 => if menor_tres='1' then y <= T31; else y <= T34; end if; 
+			when T32 => if menor_tres='1' then y <= T32; else y <= T34; end if; 
+			when T33 => if menor_tres='1' then y <= T33; else y <= T34; end if;
+			when T34 => y <= T14;
+ 		end case;
+	end if;
+	end process;
+	
+	MSS_salidas: process (y)
+	begin
+	led_fin<='0';D_aguda_severa<='0';d_aguda_moderada<='0';Riesgo_desnutr<='0';No_desnutr<='0';
+	en_cnt<='0';rst_cnt<='0';en_i_cnt<='0';rst_i_cnt<='0';en_read<='0';en_write<='0';en_reg_i<='0';rst_reg_i<='0';
+	en_reg_j<='0';rst_reg_j<='0';sel_j<='0';sel_orden<='0';en_orden<='0';rst_orden<='0';en_clasf<='0';rst_clasf<='0';
+	en_disp<='0';sel_cnt<='0';en_cnthz<='0';rst_cnthz<='0';en_ID<='0';rst_ID<='0';en_uno<='0';en_dos<='0';en_tres<='0';
+	en_cuatro<='0';en_cinco<='0';en_dato<='0';rst_datoID<='0';sel_dato<='0';	
+		case y is
+			when T1 => 
+			when T2 => 
+			when T3 => rst_cnt<='0';rst_i_cnt<='0';
+			when T4 => sel_orden<='0';en_orden<='0';
+			when T5 => en_orden<='0';
+			when T6 => 
+			when T7 => en_read<='0';en_reg_i<='0';
+			when T8 => sel_j<='0';en_read<='0';en_reg_j<='0';
+			when T9 => en_write<='0';sel_j<='0';
+			when T10 => en_write<='0';sel_orden<='0';sel_dato<='0';
+			when T11 => en_i_cnt<='0';
+			when T12 => rst_cnt<='0';
+			when T13 => led_fin<='0';en_cnthz<='0';
+			when T14 => 
+			when T15 => rst_cnthz<='0';
+			when T16 => sel_cnt<='0';en_read<='0';en_clasf<='0';
+			when T17 => No_desnutr<='0';en_disp<='0';
+			when T18 => Riesgo_desnutr<='0';en_disp<='0';
+			when T19 => d_aguda_moderada<='0';en_disp<='0';
+			when T20 => D_aguda_severa<='0';en_disp<='0';
+			when T21 => sel_cnt<='0';en_read<='0';en_cnt<='0';
+			when T22 => rst_ID<='0';
+			when T23 => 
+			when T24 => 
+			when T25 => en_ID<='0';
+			when T26 => en_dato<='0';rst_cnt<='0';en_clasf<='0';
+			when T27 => 
+			when T28 => en_cnt<='0';
+			when T29 => 
+			when T30 => No_desnutr<='0';en_disp<='0';
+			when T31 => Riesgo_desnutr<='0';en_disp<='0';
+			when T32 => d_aguda_moderada<='0';en_disp<='0';
+			when T33 => D_aguda_severa<='0';en_disp<='0';
+			when T34 => rst_cnt<='0';en_clasf<='0';
+		end case;
+	end process;
+end solve;

@@ -1,0 +1,80 @@
+--Library
+library ieee;
+use ieee.std_logic_1164.all;
+
+--Entity
+entity DecoBCD_7ABC is
+	port(
+		BCD: in std_logic_vector(11 downto 0);
+		en: in std_logic;
+		anodoA: out std_logic_vector(6 downto 0);
+		anodoB: out std_logic_vector(6 downto 0);
+		anodoC: out std_logic_vector(6 downto 0));
+end DecoBCD_7ABC;
+
+--Architecture
+architecture solve of DecoBCD_7ABC is
+	-- Signals,Constants,Variables,Components
+
+	begin
+	--Process #1
+	process(BCD[0..3])
+	--Sequential programming
+		begin
+		if en='1' then 
+			case BCD[0..3] is
+				when "0000" => anodoA<="1111110";
+				when "0001" => anodoA<="0110000";
+				when "0010" => anodoA<="1101101";
+				when "0011" => anodoA<="1111001";
+				when "0100" => anodoA<="0110011";
+				when "0101" => anodoA<="1011011";
+				when "0110" => anodoA<="0011111";
+				when "0111" => anodoA<="1110000";
+				when "1000" => anodoA<="1111111";
+				when "1001" => anodoA<="1110011";
+				when others => anodoA<="0000000";
+			end case;
+		end if;
+	end process;
+	process(BCD[4..7])
+		--Sequential programming
+		begin
+		if en='1' then 
+			case BCD[4..7] is
+				when "0000" => anodoB<="1111110";
+				when "0001" => anodoB<="0110000";
+				when "0010" => anodoB<="1101101";
+				when "0011" => anodoB<="1111001";
+				when "0100" => anodoB<="0110011";
+				when "0101" => anodoB<="1011011";
+				when "0110" => anodoB<="0011111";
+				when "0111" => anodoB<="1110000";
+				when "1000" => anodoB<="1111111";
+				when "1001" => anodoB<="1110011";
+				when others => anodoB<="0000000";
+			end case;
+		end if;
+	end process;
+	process(BCD[8..11])
+		--Sequential programming
+		begin
+		if en='1' then 
+			case BCD[8..11] is
+				when "0000" => anodoC<="1111110";
+				when "0001" => anodoC<="0110000";
+				when "0010" => anodoC<="1101101";
+				when "0011" => anodoC<="1111001";
+				when "0100" => anodoC<="0110011";
+				when "0101" => anodoC<="1011011";
+				when "0110" => anodoC<="0011111";
+				when "0111" => anodoC<="1110000";
+				when "1000" => anodoC<="1111111";
+				when "1001" => anodoC<="1110011";
+				when others => anodoC<="0000000";
+			end case;
+		end if;
+	end process;
+
+	--Process #n...
+end solve;
